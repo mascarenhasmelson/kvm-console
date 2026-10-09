@@ -1,0 +1,50 @@
+# KVM Console - systemd unit for the IP KVM server
+#
+# Install:
+#   sudo mkdir -p /opt/kvm-console
+#   sudo cp kvm-server /opt/kvm-console/
+#   sudo cp deploy/kvm-console.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now kvm-console
+#
+# Put secrets in /etc/kvm-console.env (chmod 600), for example:
+#   KVM_PASSWORD=change-me
+#   KVM_TOKENS=long-random-token-for-integrations
+
+[Unit]
+Description=KVM Console IP KVM
+After=network-online.target sound.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+
+# The service does not need root: group membership grants access to the three
+# device nodes (video -> video, /dev/snd -> audio, ttyUSB -> dialout).
+User=pi
+Group=pi
+SupplementaryGroups=video audio dialout plugdev
+
+EnvironmentFile=-/etc/kvm-console.env
+WorkingDirectory=/opt/kvm-console
+ExecStart=/opt/kvm-console/kvm-server -port :8080
+
+# USB devices are still enumerating right after a cold boot, so the first
+# attempt can fail. Wait a moment, and retry rather than give up.
+ExecStartPre=/bin/sleep 5
+Restart=on-failure
+RestartSec=5
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=kvm-console
+
+# Modest hardening. PrivateDevices is deliberately NOT set: it would hide
+# exactly the device nodes the service needs.
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=read-only
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

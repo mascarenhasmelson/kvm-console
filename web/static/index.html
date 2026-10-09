@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="description" content="Browser based KVM console: remote screen, keyboard and mouse">
+    <meta name="color-scheme" content="dark light">
+    <meta name="referrer" content="no-referrer">
+    <title>KVM Console</title>
+    <link rel="icon" type="image/svg+xml" href="img/logo.svg">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+    <!-- Remote screen. The transport inserts its <canvas> (IP mode) or
+         <video> (USB mode) here; #inputLayer is laid over the visible picture. -->
+    <div id="stage"></div>
+    <div id="inputLayer" tabindex="0" aria-label="Remote screen"></div>
+
+    <div id="streamState" hidden>
+        <div class="state-icon"><i data-icon="monitor" class="xl"></i></div>
+        <div class="title">Connecting…</div>
+        <div class="detail"></div>
+        <div class="actions"></div>
+    </div>
+
+    <!-- Toolbar -->
+    <div id="toolbar" role="toolbar" aria-label="KVM controls" hidden>
+        <div class="tb-brand"><img src="img/logo.svg" alt=""><span id="brandName">KVM Console</span></div>
+        <div class="tb-sep"></div>
+        <div class="tb-status">
+            <button class="chip" id="chipVideo" type="button" data-tip="Video"><span class="dot"></span><span class="chip-label">Video</span></button>
+            <button class="chip" id="chipAudio" type="button" data-tip="Audio"><span class="dot"></span><span class="chip-label">Audio</span></button>
+            <button class="chip" id="chipHid" type="button" data-tip="Keyboard & mouse"><span class="dot"></span><span class="chip-label">Input</span></button>
+            <span class="stream-meta" id="streamMeta"></span>
+        </div>
+        <div class="tb-sep"></div>
+        <div class="tb-actions">
+            <button class="tb-btn tb-collapsible" id="btnPaste" type="button" data-tip="Paste text to remote" aria-label="Paste text"><i data-icon="clipboard"></i></button>
+            <button class="tb-btn tb-collapsible" id="btnOcr" type="button" data-tip="Copy text from screen (OCR)" aria-label="Copy text from screen"><i data-icon="scanText"></i></button>
+            <button class="tb-btn tb-collapsible" id="btnHotkeys" type="button" data-tip="Hotkeys" aria-label="Hotkeys"><i data-icon="zap"></i></button>
+            <button class="tb-btn tb-collapsible" id="btnKeyboard" type="button" data-tip="On-screen keyboard" aria-label="On-screen keyboard"><i data-icon="keyboard"></i></button>
+            <button class="tb-btn tb-collapsible" id="btnScreenshot" type="button" data-tip="Screenshot" aria-label="Screenshot"><i data-icon="camera"></i></button>
+            <button class="tb-btn tb-collapsible" id="btnRecord" type="button" data-tip="Screen recorder" aria-label="Screen recorder"><i data-icon="video"></i></button>
+            <div class="tb-sep tb-collapsible"></div>
+            <button class="tb-btn tb-collapsible" id="btnMouseMode" type="button" data-tip="Mouse mode" aria-label="Mouse mode"><i data-icon="pointer"></i><span class="label">Absolute</span></button>
+            <button class="tb-btn tb-collapsible" id="btnCtrlCmd" type="button" data-tip="Swap Ctrl and Cmd" aria-label="Swap Ctrl and Cmd"><i data-icon="command"></i></button>
+            <button class="tb-btn tb-collapsible" id="btnMute" type="button" data-tip="Mute" aria-label="Mute"><i data-icon="volume"></i></button>
+            <button class="tb-btn tb-collapsible" id="btnFullscreen" type="button" data-tip="Full screen" aria-label="Full screen"><i data-icon="maximize"></i></button>
+        </div>
+        <div class="tb-right">
+            <button class="tb-btn" id="btnMore" type="button" data-tip="More" aria-label="More tools"><i data-icon="more"></i></button>
+            <button class="tb-btn" id="btnSettings" type="button" data-tip="Settings" aria-label="Settings"><i data-icon="settings"></i></button>
+            <button class="tb-btn" id="btnHideToolbar" type="button" data-tip="Hide toolbar" aria-label="Hide toolbar"><i data-icon="chevronUp"></i></button>
+        </div>
+    </div>
+    <div id="toolbarReveal"></div>
+    <div id="toolbarHandle"></div>
+
+    <div id="noSignal" hidden><i data-icon="alert"></i><span>The capture card is connected, but there is no HDMI signal from the remote machine.</span></div>
+    <div id="viewOnlyBadge" hidden><i data-icon="eye" class="sm"></i>View only</div>
+    <div id="pointerHint" hidden><i data-icon="mouse"></i>Click the screen to capture the pointer · <span class="kbd">Esc</span> releases it</div>
+
+    <div id="stackDisplay" hidden>
+        <div class="stack-title"><span class="dot"></span>Stacked keys</div>
+        <div class="stack-keys"></div>
+        <div class="stack-hint"></div>
+    </div>
+    <div id="stackTrigger" hidden><div class="fill"></div></div>
+
+    <!-- Settings drawer -->
+    <div id="settingsScrim"></div>
+    <aside id="settingsDrawer" aria-hidden="true" aria-label="Settings">
+        <div class="drawer-head">
+            <h2>Settings</h2>
+            <button class="btn ghost sm icon-only" type="button" data-close aria-label="Close settings"><i data-icon="x"></i></button>
+        </div>
+        <nav class="drawer-tabs"></nav>
+        <div class="drawer-body"></div>
+    </aside>
+
+    <noscript>
+        <div class="overlay"><div class="card"><h1>JavaScript required</h1><p>The KVM console needs JavaScript to run.</p></div></div>
+    </noscript>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>

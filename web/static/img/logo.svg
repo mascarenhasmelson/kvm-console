@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="KVM Console">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6aa2ff"/>
+      <stop offset="1" stop-color="#3b6fe0"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#g)"/>
+  <rect x="13" y="16" width="38" height="25" rx="4" fill="none" stroke="#fff" stroke-width="4"/>
+  <path d="M25 48h14" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+  <path d="M32 41v7" stroke="#fff" stroke-width="4"/>
+  <path d="M30 23l0 14l4-4l3 6l3-1.5l-3-6l5.5-0.5z" fill="#fff"/>
+</svg>
